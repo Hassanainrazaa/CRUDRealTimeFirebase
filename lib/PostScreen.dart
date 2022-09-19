@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'AddPost.dart';
 
@@ -14,6 +15,7 @@ class PostScreen extends StatefulWidget {
 class _PostScreenState extends State<PostScreen> {
   final ref = FirebaseDatabase.instance.ref("Post");
   TextEditingController SearchController = TextEditingController();
+  TextEditingController EditController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,9 @@ class _PostScreenState extends State<PostScreen> {
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: TextFormField(
-              onChanged: (value) {},
+              onChanged: (String value) {
+                setState(() {});
+              },
               controller: SearchController,
               decoration: const InputDecoration(
                   hintText: "Search",
@@ -54,6 +58,29 @@ class _PostScreenState extends State<PostScreen> {
                     return ListTile(
                       title: Text(snapshot.child("Title").value.toString()),
                       subtitle: Text(snapshot.child("id").value.toString()),
+                      trailing: PopupMenuButton(
+                        icon: const Icon(Icons.more),
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              child: ListTile(
+                                onTap: () {
+                                  ShowUpdateDia("title",
+                                      snapshot.child("id").value.toString());
+                                },
+                                leading: const Icon(Icons.edit),
+                                title: const Text("Edit"),
+                              ),
+                            ),
+                            const PopupMenuItem(
+                              child: ListTile(
+                                leading: Icon(Icons.delete),
+                                title: Text("Delete"),
+                              ),
+                            )
+                          ];
+                        },
+                      ),
                     );
                   } else if (title.toLowerCase().contains(
                       SearchController.text.toLowerCase().toLowerCase())) {
@@ -85,5 +112,40 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
-  Future<dynamic> assigingData() async {}
+  Future<void> ShowUpdateDia(String title, String id) {
+    EditController.text = title;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Add Text to Update"),
+            content: Container(
+              child: TextFormField(
+                controller: EditController,
+                decoration: const InputDecoration(
+                    hintText: "Add the value", border: OutlineInputBorder()),
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Cancel")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    ref.child(id).update({
+                      "Title": EditController.text.toLowerCase()
+                    }).then((value) {
+                      Fluttertoast.showToast(msg: "value updated");
+                    }).onError((error, stackTrace) {
+                      Fluttertoast.showToast(msg: "Something wrong$error");
+                    });
+                  },
+                  child: const Text("Update"))
+            ],
+          );
+        });
+  }
 }

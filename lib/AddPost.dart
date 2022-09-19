@@ -40,10 +40,9 @@ class _AddPostState extends State<AddPost> {
                   setState(() {
                     loading = true;
                   });
-                  DataBaseRef.child(
-                          DateTime.now().microsecondsSinceEpoch.toString())
-                      .set({
-                    "id": DateTime.now().microsecondsSinceEpoch.toString(),
+                  String id = DateTime.now().microsecondsSinceEpoch.toString();
+                  DataBaseRef.child(id).set({
+                    "id": id,
                     "no": "03352588084",
                     "Title": onMindCtrl.text
                   }).then((value) {
