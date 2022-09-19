@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "841724104970",
+    "project_id": "speedforce-347f8",
+    "storage_bucket": "speedforce-347f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:841724104970:android:d1baf14e755829e7562af3",
+        "android_client_info": {
+          "package_name": "com.example.firebasetasks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "841724104970-eu0acg9fcp5gfo3gbnojcjo4be6voc0t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbiESo1W9GTURXJeRXxClt2EABQciXZv8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "841724104970-eu0acg9fcp5gfo3gbnojcjo4be6voc0t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
