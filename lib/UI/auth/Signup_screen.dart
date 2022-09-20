@@ -1,4 +1,5 @@
 import 'package:firebasetasks/UI/auth/Login_screen.dart';
+import 'package:firebasetasks/Utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../Widgets/RoundButton.dart';
@@ -11,6 +12,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  bool loading = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final _formfield = GlobalKey<FormState>();
@@ -23,6 +25,31 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
+  }
+
+  void Login() {
+    setState(() {
+      loading = true;
+    });
+    auth
+        .createUserWithEmailAndPassword(
+            email: emailController.text.toString(),
+            password: passwordController.text.toString())
+        .then((value) {
+      setState(() {
+        loading = false;
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+      utils().toasteMessage("Your account got regisitered you can login now");
+    }).onError((error, stackTrace) {
+      setState(() {
+        loading = false;
+      });
+      utils().toasteMessage(error.toString());
+    });
   }
 
   @override
@@ -86,13 +113,12 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 30,
               ),
               RoundedButton(
+                loading: loading,
                 title: "Sign up",
                 onTap: () {
                   print("tabed");
                   if (_formfield.currentState!.validate()) {
-                    auth.createUserWithEmailAndPassword(
-                        email: emailController.text.toString(),
-                        password: passwordController.text.toString());
+                    Login();
                   }
                 },
               ),

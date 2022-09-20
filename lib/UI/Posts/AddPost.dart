@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+// for File
 
 class AddPost extends StatefulWidget {
   const AddPost({Key? key}) : super(key: key);
@@ -13,6 +16,39 @@ class _AddPostState extends State<AddPost> {
   TextEditingController onMindCtrl = TextEditingController();
   bool loading = false;
   final DataBaseRef = FirebaseDatabase.instance.ref("Post");
+  XFile? image;
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemp = XFile(image.path);
+      setState(() => this.image = imageTemp);
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+  // XFile? _image;
+  // XFile? imagefile;
+  // Future getImageCamera() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final ImageCam = await picker.pickImage(source: ImageSource.camera);
+  //   print(imagefile);
+  //   setState(() {
+  //     imagefile = File(ImageCam!.path);
+  //     _image = ImageCam;
+  //   });
+  //   //imagefile = File(ImageCam!.path);
+  // }
+
+  // Future getImageGallery() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final ImageCam = await picker.pickImage(source: ImageSource.gallery);
+  //   print(imagefile);
+  //   setState(() {
+  //     imagefile = File(ImageCam!.path);
+  //     _image = ImageCam;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +58,20 @@ class _AddPostState extends State<AddPost> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
+            Center(
+              child: InkWell(
+                onTap: () {
+                  pickImage();
+                },
+                child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        color: Colors.black12,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Icon(Icons.add_a_photo)),
+              ),
+            ),
             const SizedBox(
               height: 30,
             ),
